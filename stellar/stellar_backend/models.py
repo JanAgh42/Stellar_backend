@@ -1,5 +1,5 @@
 from django.db import models
-from .helpers import model_helpers as helper
+from .helpers.model_helpers import token_date, generate_name
 
 import datetime as dt
 import uuid
@@ -11,9 +11,9 @@ class Uuid(models.Model):
         abstract = True
 
 class User(Uuid):
-    name = models.CharField(max_length = 100, unique = True)
-    image_url = models.CharField(max_length = 256)
-    personal_color = models.CharField(max_length = 7)
+    name = models.CharField(max_length = 100, unique = True, default = generate_name)
+    image_url = models.CharField(max_length = 256, default = "")
+    personal_color = models.CharField(max_length = 7, default = "#ffffff")
 
 class Group(Uuid):
     owner_id = models.ForeignKey("User", on_delete = models.CASCADE)
@@ -44,10 +44,10 @@ class Notification(Uuid):
 
 class SignInData(models.Model):
     email = models.EmailField(primary_key = True, unique = True, max_length = 30)
-    user_id = models.ForeignKey("User", models.CASCADE)
+    user_id = models.CharField(max_length = 100)
     password = models.CharField(max_length = 100)
 
 class SessionToken(models.Model):
-    token = models.CharField(primary_key = True, editable = False, unique = True, max_length = 50)
-    user_id = models.ForeignKey("User", models.CASCADE)
-    date = models.DateTimeField(default = helper.token_date)
+    token = models.CharField(primary_key = True, unique = True, max_length = 100)
+    user_id = models.CharField(max_length = 100)
+    date = models.DateTimeField(default = token_date)

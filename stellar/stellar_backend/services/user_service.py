@@ -1,13 +1,14 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import DatabaseError
 
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import UserSerializer
 from ..models import User, GroupsMember
+
+from .sign_in_data_service import create_register_entry as register, validate_auth
+from .session_service import create_user_token, get_user_token
 
 def get_user(user_id):
     try:
@@ -28,6 +29,27 @@ def register_user(request):
         if user_serializer.is_valid():
             user = user_serializer.save()
 
-            return Response("Success", status = status.HTTP_201_CREATED)
+            if not register(request, str(user.id)):
+                raise DatabaseError()
+            
+            token = create_user_token(str(user.id))
+
+            return Response({
+                "user_id": str(user.id),
+                "token": token
+            }, status = status.HTTP_201_CREATED)
     except DatabaseError:
         return Response("User already exists", status = status.HTTP_409_CONFLICT)
+    
+def authenticate_user(request):
+    try:
+        auth = validate_auth(request.data)
+        token = get_user_token(auth["user_id"])
+
+        return Response({
+                "user_id": str(auth["user_id"]),
+                "token": token
+            }, status = status.HTTP_200_OK)
+
+    except ObjectDoesNotExist:
+        return Response("Invalid credentials", status.HTTP_401_UNAUTHORIZED)
