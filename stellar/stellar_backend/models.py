@@ -24,21 +24,21 @@ class Group(Uuid):
     icon_background_color = models.CharField(max_length = 7)
 
 class GroupsMember(Uuid):
-    user_id = models.ForeignKey("User", on_delete = models.CASCADE)
-    group_id = models.ForeignKey("Group", on_delete = models.CASCADE)
+    user_id = models.CharField(max_length = 100)
+    group_id = models.CharField(max_length = 100)
     is_owner = models.BooleanField()
 
 class Message(Uuid):
-    user_id = models.ForeignKey("User", on_delete = models.CASCADE, related_name = "user_id")
-    group_id = models.ForeignKey("Group", on_delete = models.CASCADE)
-    reply_to_id = models.ForeignKey("User", on_delete = models.SET_NULL, related_name = "reply_to_id", default = None, blank = True, null = True)
+    user_id = models.CharField(max_length = 100)
+    group_id = models.CharField(max_length = 100)
+    reply_to_id = models.CharField(max_length = 100, default = None)
     message = models.CharField(max_length = 1000)
     date = models.DateTimeField(default = dt.datetime.now)
     location = models.CharField(max_length = 50)
     image_url = models.CharField(max_length = 256)
 
 class Notification(Uuid):
-    user_id = models.ForeignKey("User", on_delete = models.CASCADE)
+    user_id = models.CharField(max_length = 100)
     message = models.CharField(max_length = 200)
     date = models.DateTimeField(default = dt.datetime.now)
 

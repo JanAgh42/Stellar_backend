@@ -22,6 +22,12 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = ['id', 'name', 'owner_id', 'category', 'icon', 'banner_color', 'icon_background_color']
 
+class NotificationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'user_id', 'message', 'date']
+
 class GroupsMemberSerializer(serializers.ModelSerializer):
 
     class Meta:

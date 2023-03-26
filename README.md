@@ -9,4 +9,4 @@ A social network for students and study groups.
 
 ### Technology:
 
-- Built in Pytho, Django, Django REST Framework & MongoDB Atlas
+- Built in Python, Django, Django REST Framework & MongoDB Atlas
