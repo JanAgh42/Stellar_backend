@@ -16,7 +16,7 @@ class User(Uuid):
     personal_color = models.CharField(max_length = 7, default = "#ffffff")
 
 class Group(Uuid):
-    owner_id = models.ForeignKey("User", on_delete = models.CASCADE)
+    owner_id = models.CharField(max_length = 100)
     name = models.CharField(max_length = 100, unique = True)
     category = models.CharField(max_length = 50)
     icon = models.CharField(max_length = 20)

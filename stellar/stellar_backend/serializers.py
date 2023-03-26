@@ -15,3 +15,9 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionToken
         fields = ['user_id', 'token', 'date']
+
+class GroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
+        fields = ['id', 'name', 'owner_id', 'category', 'icon', 'banner_color', 'icon_background_color']
