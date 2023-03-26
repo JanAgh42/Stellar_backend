@@ -21,3 +21,9 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'name', 'owner_id', 'category', 'icon', 'banner_color', 'icon_background_color']
+
+class GroupsMemberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupsMember
+        fields = ['user_id', 'group_id', 'is_owner']

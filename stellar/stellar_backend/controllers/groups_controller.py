@@ -8,3 +8,15 @@ def manage_single_group(request, group_id):
         return group_service.get_group(group_id)
     elif request.method == 'DELETE':
         return group_service.delete_group(group_id)
+    
+@api_view(['GET'])
+def own_groups(request, user_id):
+    return group_service.own_groups(user_id)
+
+@api_view(['GET'])
+def all_groups(request, user_id):
+    return group_service.all_groups(user_id)
+
+@api_view(['POST'])
+def new_group(request, user_id):
+    return group_service.all_groups(user_id)
