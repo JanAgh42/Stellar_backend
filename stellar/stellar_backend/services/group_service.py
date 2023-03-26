@@ -26,3 +26,15 @@ def delete_group(group_id):
         return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
+
+def change_group(request, group_id):
+    try:
+        old_group = Group.objects.get(id = group_id)
+        updated_group = GroupSerializer(old_group, data = request.data)
+
+        if updated_group.is_valid():
+            updated_group.save()
+
+            return Response(status = status.HTTP_204_NO_CONTENT)
+    except ObjectDoesNotExist:
+        return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
