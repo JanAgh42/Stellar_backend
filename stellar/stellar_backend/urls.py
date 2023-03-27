@@ -20,5 +20,5 @@ urlpatterns = [
     path('messages/<message_id>', messages_controller.message_content),
     path('messages/<message_id>/delete', messages_controller.delete_message),
     path('usersgroups/', usersgroups_controller.map_user_group),
-    path('usersgroups/<user_id>/member<group_id>', usersgroups_controller.group_member)
+    path('usersgroups/<user_id>/member/<group_id>', usersgroups_controller.group_member)
 ]

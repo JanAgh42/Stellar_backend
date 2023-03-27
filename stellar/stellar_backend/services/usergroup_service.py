@@ -9,19 +9,19 @@ from ..models import GroupsMember
 
 def map_user_group(request):
     try:
-        groupsmember_serializer = GroupsMemberSerializer(data = request.data)
-
-    except:
-        return Response("", status = status.HTTP_400_BAD_REQUEST)
+        groupmember_serializer = GroupsMemberSerializer(data = request.data)
+        if groupmember_serializer.is_valid():
+            groupmember_serializer.save()
+        
+        return Response("Successful mapping", status = status.HTTP_201_CREATED)
     
-    return Response('', status = status.HTTP_201_CREATED)
+    except:
+        return Response("Can't map user to group", status = status.HTTP_400_BAD_REQUEST)
 
 def group_member(request, user_id, group_id):
-    try:
-        usergroup = GroupsMember.objects.get(user_id = user_id, group_id = group_id)
 
-    except:
-        return Response("", status = status.HTTP_404_NOT_FOUND)
-    
+    usergroup = GroupsMember.objects.filter(user_id = user_id)  
+    usergroup_data = usergroup.GroupsMemberSerializer(usergroup, many = True).data
+
     return Response('', status = status.HTTP_200_OK)
 

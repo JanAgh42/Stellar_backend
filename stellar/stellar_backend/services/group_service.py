@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import DatabaseError
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -44,7 +45,7 @@ def all_groups(user_id):
     all_groups_data = list()
     for g in groups_ids_data:
         group = Group.objects.filter(id = g['group_id'])
-        all_groups_data.append(*GroupSerializer(group, many = True).data)
+        all_groups_data.append(GroupSerializer(group).data)
 
     return Response(all_groups_data, status = status.HTTP_200_OK)
  
@@ -57,6 +58,6 @@ def new_group(request):
 
             return Response("Group successfully created", status = status.HTTP_201_CREATED)
 
-    except:
-        return Response("Can't create new group", status = status.HTTP_409_CONFLICT)
+    except DatabaseError:
+        return Response("Group already exists", status = status.HTTP_409_CONFLICT)
     

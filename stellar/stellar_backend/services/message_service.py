@@ -26,6 +26,7 @@ def message_content(request, message_id):
 
         user = User.objects.get(id = message_data["user_id"])
         user_data = UserSerializer(user).data
+        #osetrit null
         reply_to = User.objects.get(id = message_data["reply_to_id"])
         reply_to_data = UserSerializer(reply_to).data
 
