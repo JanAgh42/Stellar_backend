@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import DatabaseError
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -47,19 +48,23 @@ def new_notification(request):
     
 def new_group_notification(request, group_id):
 
-    # try:
-    #     group_users = GroupsMember.objects.filter(group_id = group_id)
-    #     groups_users_data = GroupsMemberSerializer(group_users, many = True).data
+    try:
+        group_users = GroupsMember.objects.filter(group_id = group_id)
+        counter = 0
+        # groups_users_data = GroupsMemberSerializer(data = group_users, many = True)
 
-    #     if groups_users_data.is_valid():
+        # if groups_users_data.is_valid():
 
-    #         for user in groups_users_data:
-    #             notification_serializer = NotificationSerializer(data = request.data)
-    #             notification_serializer['user_id'] = user['id']
-    #             if notification_serializer.is_valid():
-    #                 notification_serializer.save()
-
-    #         return Response("Notifications created", status = status.HTTP_201_CREATED)
+        for user in group_users:
+            notification_serializer = NotificationSerializer(data = request.data)
+            notification_serializer.user_id = user.id
+            if notification_serializer.is_valid():
+                notification_serializer.save()
+                counter += 1
+        if group_users.__len__() == counter:
+            return Response("Notifications created", status = status.HTTP_201_CREATED)
+        else:
+            return Response("Can't create notifications", status = status.HTTP_400_BAD_REQUEST)
         
-    # except:
-    return Response("Can't create notifications", status = status.HTTP_400_BAD_REQUEST)
+    except DatabaseError:
+        return Response("Can't create notifications", status = status.HTTP_400_BAD_REQUEST)

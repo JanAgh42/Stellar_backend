@@ -1,3 +1,5 @@
+from django.db import DatabaseError
+from django.http import QueryDict
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,13 +12,20 @@ from ..models import Message, User
 
 def new_message(request):
     try:
+        if isinstance(request.data, QueryDict):
+            request.data._mutable = True
+
+        if request.data["reply_to_id"] is None:
+            request.data["reply_to_id"] = ""
+
         message_serializer = MessageSerializer(data = request.data)
-        if message_serializer.is_valid():
+
+        if message_serializer.is_valid():        
             message = message_serializer.save()
         
-        return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
-    
-    except:
+            return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
+        else: return Response("serializer not valid", status = status.HTTP_300_MULTIPLE_CHOICES)
+    except DatabaseError:
         return Response("Can't create message", status = status.HTTP_400_BAD_REQUEST)
 
 def message_content(request, message_id):
@@ -25,14 +34,14 @@ def message_content(request, message_id):
         message_data = MessageSerializer(message).data
 
         user = User.objects.get(id = message_data["user_id"])
-        user_data = UserSerializer(user).data
-        #osetrit null
-        reply_to = User.objects.get(id = message_data["reply_to_id"])
-        reply_to_data = UserSerializer(reply_to).data
 
-        message_data["user_id"] = user_data["name"]
-        message_data["reply_to_id"] = reply_to_data["name"]
-
+        if message_data["reply_to_id"] is not "":
+            reply_to = User.objects.get(id = message_data["reply_to_id"])
+            message_data["reply_to_id"] = reply_to.name
+        else:
+            message_data["reply_to_id"] = None
+        
+        message_data["user_id"] = user.name
     except ObjectDoesNotExist:
         return Response("Message not found", status = status.HTTP_404_NOT_FOUND)
     

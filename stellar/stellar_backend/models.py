@@ -31,7 +31,7 @@ class GroupsMember(Uuid):
 class Message(Uuid):
     user_id = models.CharField(max_length = 100)
     group_id = models.CharField(max_length = 100)
-    reply_to_id = models.CharField(max_length = 100, default = None)
+    reply_to_id = models.CharField(max_length = 100, default = "")
     message = models.CharField(max_length = 1000)
     date = models.DateTimeField(default = dt.datetime.now)
     location = models.CharField(max_length = 50)

@@ -35,7 +35,7 @@ class GroupsMemberSerializer(serializers.ModelSerializer):
         fields = ['user_id', 'group_id', 'is_owner']
 
 class MessageSerializer(serializers.ModelSerializer):
-
+    reply_to_id = serializers.CharField(allow_blank = True)
     class Meta:
         model = Message
         fields = ['user_id', 'group_id', 'reply_to_id', 'message', 'date', 'location', 'image_url']

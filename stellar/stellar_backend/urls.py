@@ -27,15 +27,17 @@ notification_urls = [
 message_urls = [
     path('messages/', messages_controller.new_message),
     path('messages/<message_id>', messages_controller.message_content),
-    path('messages/<group_id>/get-all', messages_controller.get_group_messages),
+    # path('messages/<group_id>/get-all', messages_controller.get_group_messages),
     path('messages/<message_id>/change', messages_controller.change_message),
     path('messages/<message_id>/delete', messages_controller.delete_message),
     path('messages/<group_id>/delete-all', messages_controller.delete_group_messages)
 ]
 
 usergroup_urls = [
-    path('usersgroups/', usersgroups_controller.map_user_group),
-    path('usersgroups/<user_id>/member/<group_id>', usersgroups_controller.group_member)
+    path('usersgroups/', usersgroups_controller.add_user_to_group),
+    path('usersgroups/<user_id>/member/<group_id>', usersgroups_controller.is_member_of_group),
+    path('usersgroups/<user_id>/leave/<group_id>', usersgroups_controller.delete_user_from_group),
+    path('usersgroups/<user_id>/owner', usersgroups_controller.num_where_is_owner)
 ]
 
 urlpatterns = [
