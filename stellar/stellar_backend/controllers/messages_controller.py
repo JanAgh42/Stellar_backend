@@ -10,6 +10,10 @@ def new_message(request):
 def message_content(request, message_id):
     return message_service.message_content(request, message_id)
 
+@api_view(['GET'])
+def get_group_messages(request, group_id):
+    return message_service.get_group_messages(group_id)
+
 @api_view(['DELETE'])
 def delete_message(request, message_id):
     return message_service.delete_message(request, message_id)
