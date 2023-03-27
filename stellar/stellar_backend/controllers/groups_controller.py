@@ -13,11 +13,11 @@ def manage_single_group(request, group_id):
     
 @api_view(['GET'])
 def get_own_groups(request, user_id):
-    return group_service.own_groups(user_id)
+    return group_service.get_own_groups(user_id)
 
 @api_view(['GET'])
 def get_all_groups(request, user_id):
-    return group_service.all_groups(user_id)
+    return group_service.get_all_groups(user_id)
 
 @api_view(['POST'])
 def new_group(request):

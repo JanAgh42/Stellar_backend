@@ -32,10 +32,10 @@ class GroupsMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GroupsMember
-        fields = ['user_id', 'group_id', 'is_owner']
+        fields = ['id', 'user_id', 'group_id', 'is_owner']
 
 class MessageSerializer(serializers.ModelSerializer):
     reply_to_id = serializers.CharField(allow_blank = True)
     class Meta:
         model = Message
-        fields = ['user_id', 'group_id', 'reply_to_id', 'message', 'date', 'location', 'image_url']
+        fields = ['id', 'user_id', 'group_id', 'reply_to_id', 'message', 'date', 'location', 'image_url']

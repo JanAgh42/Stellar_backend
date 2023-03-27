@@ -5,8 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import GroupSerializer
-from ..models import Group
-from ..models import GroupsMember
+from ..models import Group, GroupsMember
+
+from .message_service import delete_group_messages
+from .usergroup_service import delete_user_from_group
 
 def get_group(group_id):
     try:
@@ -22,6 +24,9 @@ def get_group(group_id):
 def delete_group(group_id):
     try:
         group = Group.objects.get(id = group_id)
+        
+        delete_user_from_group(group.owner_id, group_id)
+        delete_group_messages(group_id)
 
         group.delete()
     except ObjectDoesNotExist:
