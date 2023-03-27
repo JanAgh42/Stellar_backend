@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import GroupSerializer
-from ..serializers import GroupsMemberSerializer
 from ..models import Group
 from ..models import GroupsMember
 

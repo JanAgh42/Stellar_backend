@@ -4,7 +4,7 @@ from django.db import DatabaseError
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..serializers import GroupsMemberSerializer, NotificationSerializer
+from ..serializers import NotificationSerializer
 from ..models import GroupsMember, Notification
 
 def get_notifications(user_id):
@@ -43,7 +43,7 @@ def new_notification(request):
 
             return Response({"notification_id": str(notification.id)}, status = status.HTTP_201_CREATED)
 
-    except:
+    except DatabaseError:
         return Response("Can't create notification", status = status.HTTP_400_BAD_REQUEST)
     
 def new_group_notification(request, group_id):
@@ -55,6 +55,7 @@ def new_group_notification(request, group_id):
         for user in group_users:
             notification_serializer = NotificationSerializer(data = request.data)
             notification_serializer.user_id = user.id
+
             if notification_serializer.is_valid():
                 notification_serializer.save()
                 counter += 1

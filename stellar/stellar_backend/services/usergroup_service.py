@@ -1,6 +1,5 @@
-from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import DatabaseError
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -16,7 +15,7 @@ def add_user_to_group(request):
         
         return Response("User added to group", status = status.HTTP_201_CREATED)
     
-    except:
+    except DatabaseError:
         return Response("Invalid group or user id", status = status.HTTP_400_BAD_REQUEST)
     
 def delete_user_from_group(user_id, group_id):
@@ -43,6 +42,7 @@ def num_where_is_owner(user_id):
     groups = GroupsMember.objects.filter(user_id = user_id)
     groups_data = GroupsMemberSerializer(groups, many = True).data
     num_is_owner = 0
+
     for group in groups_data:
         if group["is_owner"] == True:
             num_is_owner += 1

@@ -1,13 +1,11 @@
 from django.db import DatabaseError
 from django.http import QueryDict
-from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import status
 from rest_framework.response import Response
 
-from ..serializers import MessageSerializer, UserSerializer
+from ..serializers import MessageSerializer
 from ..models import Message, User
 
 def new_message(request):
@@ -24,7 +22,6 @@ def new_message(request):
             message = message_serializer.save()
         
             return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
-        else: return Response("serializer not valid", status = status.HTTP_300_MULTIPLE_CHOICES)
     except DatabaseError:
         return Response("Can't create message", status = status.HTTP_400_BAD_REQUEST)
 
@@ -35,7 +32,7 @@ def get_message_content(message_id):
 
         user = User.objects.get(id = message_data["user_id"])
 
-        if message_data["reply_to_id"] is not "":
+        if message_data["reply_to_id"] != "":
             reply_to = User.objects.get(id = message_data["reply_to_id"])
             message_data["reply_to_id"] = reply_to.name
         else:
