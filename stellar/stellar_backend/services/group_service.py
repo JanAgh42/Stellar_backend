@@ -44,7 +44,7 @@ def all_groups(user_id):
 
     all_groups_data = list()
     for g in groups_ids_data:
-        group = Group.objects.filter(id = g['group_id'])
+        group = Group.objects.get(id = g['group_id'])
         all_groups_data.append(GroupSerializer(group).data)
 
     return Response(all_groups_data, status = status.HTTP_200_OK)
