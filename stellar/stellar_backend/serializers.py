@@ -33,3 +33,9 @@ class GroupsMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupsMember
         fields = ['user_id', 'group_id', 'is_owner']
+
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ['user_id', 'group_id', 'reply_to_id', 'message', 'date', 'location', 'image_url']

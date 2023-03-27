@@ -18,5 +18,5 @@ def all_groups(request, user_id):
     return group_service.all_groups(user_id)
 
 @api_view(['POST'])
-def new_group(request, user_id):
-    return group_service.all_groups(user_id)
+def new_group(request):
+    return group_service.new_group(request)

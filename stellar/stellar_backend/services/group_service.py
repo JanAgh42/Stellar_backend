@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import DatabaseError
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -38,16 +37,26 @@ def own_groups(user_id):
     return Response(own_groups_data, status = status.HTTP_200_OK)
 
 def all_groups(user_id):
+
+    groups_ids = GroupsMember.objects.filter(user_id = user_id)
+    groups_ids_data = GroupsMemberSerializer(groups_ids, many = True).data
+
+    all_groups_data = list()
+    for g in groups_ids_data:
+        group = Group.objects.filter(id = g['group_id'])
+        all_groups_data.append(*GroupSerializer(group, many = True).data)
+
+    return Response(all_groups_data, status = status.HTTP_200_OK)
+ 
+def new_group(request):
     try:
+        group_serializer = GroupSerializer(data = request.data)
 
-        groups_ids = GroupsMember.objects.filter(user_id = user_id)
-        # all_groups_data = None
-        # for group in groups_ids:
-        data = GroupsMemberSerializer(groups_ids, many=True).data
-    except DatabaseError:
-        print(DatabaseError)
-    return Response("boo", status = status.HTTP_200_OK)
-    # own_groups_data = GroupSerializer(own_groups, many = True).data
+        if group_serializer.is_valid():
+            group_serializer.save()
 
-    # return Response(own_groups_data, status = status.HTTP_200_OK)
+            return Response("Group successfully created", status = status.HTTP_201_CREATED)
+
+    except:
+        return Response("Can't create new group", status = status.HTTP_409_CONFLICT)
     
