@@ -28,7 +28,7 @@ def new_message(request):
     except DatabaseError:
         return Response("Can't create message", status = status.HTTP_400_BAD_REQUEST)
 
-def message_content(request, message_id):
+def get_message_content(message_id):
     try:
         message = Message.objects.get(id = message_id)
         message_data = MessageSerializer(message).data
@@ -47,7 +47,7 @@ def message_content(request, message_id):
     
     return Response(message_data, status = status.HTTP_200_OK)
 
-def delete_message(request, message_id):
+def delete_message(message_id):
     try:
         message = Message.objects.get(id = message_id)
         message.delete()

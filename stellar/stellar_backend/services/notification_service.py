@@ -51,9 +51,6 @@ def new_group_notification(request, group_id):
     try:
         group_users = GroupsMember.objects.filter(group_id = group_id)
         counter = 0
-        # groups_users_data = GroupsMemberSerializer(data = group_users, many = True)
-
-        # if groups_users_data.is_valid():
 
         for user in group_users:
             notification_serializer = NotificationSerializer(data = request.data)

@@ -11,8 +11,8 @@ user_urls = [
 
 group_urls = [
     path('groups/<group_id>', groups_controller.manage_single_group),
-    path('groups/<user_id>/owner', groups_controller.own_groups),
-    path('groups/<user_id>/all', groups_controller.all_groups),
+    path('groups/<user_id>/owner', groups_controller.get_own_groups),
+    path('groups/<user_id>/all', groups_controller.get_all_groups),
     path('groups/', groups_controller.new_group)
 ]
 
@@ -26,8 +26,8 @@ notification_urls = [
 
 message_urls = [
     path('messages/', messages_controller.new_message),
-    path('messages/<message_id>', messages_controller.message_content),
-    # path('messages/<group_id>/get-all', messages_controller.get_group_messages),
+    path('messages/<message_id>', messages_controller.get_message_content),
+    path('messages/<group_id>/get-all', messages_controller.get_group_messages),
     path('messages/<message_id>/change', messages_controller.change_message),
     path('messages/<message_id>/delete', messages_controller.delete_message),
     path('messages/<group_id>/delete-all', messages_controller.delete_group_messages)

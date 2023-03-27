@@ -43,14 +43,14 @@ def change_group(request, group_id):
         return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
 
 
-def own_groups(user_id):
+def get_own_groups(user_id):
     own_groups = Group.objects.filter(owner_id = user_id)
 
     own_groups_data = GroupSerializer(own_groups, many = True).data
 
     return Response(own_groups_data, status = status.HTTP_200_OK)
 
-def all_groups(user_id):
+def get_all_groups(user_id):
 
     groups_ids = GroupsMember.objects.filter(user_id = user_id)
     all_groups_data = list()

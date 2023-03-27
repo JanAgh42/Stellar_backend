@@ -30,7 +30,7 @@ def delete_user_from_group(user_id, group_id):
     return Response(status = status.HTTP_204_NO_CONTENT)
 
 
-def is_member_of_group(request, user_id, group_id):
+def is_member_of_group(user_id, group_id):
     try:
         GroupsMember.objects.get(user_id = user_id, group_id = group_id)
 
@@ -46,7 +46,7 @@ def num_where_is_owner(user_id):
     for group in groups_data:
         if group["is_owner"] == True:
             num_is_owner += 1
-            
+
     return Response({"num_groups_owner": num_is_owner}, status = status.HTTP_200_OK)
 
 
