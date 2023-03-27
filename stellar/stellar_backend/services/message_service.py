@@ -46,3 +46,25 @@ def delete_message(request, message_id):
         return Response("Can't delete message", status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
+
+def delete_group_messages(group_id):
+    try:
+        messages = Message.objects.filter(group_id = group_id)
+
+        messages.delete()
+    except ObjectDoesNotExist:
+        return Response("One or more messages not found", status = status.HTTP_404_NOT_FOUND)
+    
+    return Response(status = status.HTTP_204_NO_CONTENT)    
+
+def change_message(request, message_id):
+    try:
+        old_message = Message.objects.get(id = message_id)
+        updated_message = MessageSerializer(old_message, data = request.data)
+
+        if updated_message.is_valid():
+            updated_message.save()
+
+            return Response(status = status.HTTP_204_NO_CONTENT)
+    except ObjectDoesNotExist:
+        return Response("Message not found", status = status.HTTP_404_NOT_FOUND)

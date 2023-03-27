@@ -61,7 +61,7 @@ def all_groups(user_id):
         all_groups_data.append(GroupSerializer(group).data)
 
     return Response(all_groups_data, status = status.HTTP_200_OK)
- 
+
 def new_group(request):
     try:
         group_serializer = GroupSerializer(data = request.data)
