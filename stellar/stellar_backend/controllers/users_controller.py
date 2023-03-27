@@ -6,6 +6,8 @@ def get_put_user(request, user_id):
 
     if request.method == 'GET':
         return user_service.get_user(user_id)
+    elif request.method == 'PUT':
+        return user_service.change_user(request, user_id)
     
 @api_view(['POST'])
 def register_user(request):

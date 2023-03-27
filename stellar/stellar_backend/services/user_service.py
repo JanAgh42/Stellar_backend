@@ -53,3 +53,15 @@ def authenticate_user(request):
 
     except ObjectDoesNotExist:
         return Response("Invalid credentials", status.HTTP_401_UNAUTHORIZED)
+    
+def change_user(request, user_id):
+    try:
+        old_user = User.objects.get(id = user_id)
+        updated_user = UserSerializer(old_user, data = request.data)
+
+        if updated_user.is_valid():
+            updated_user.save()
+
+            return Response(status = status.HTTP_204_NO_CONTENT)
+    except ObjectDoesNotExist:
+        return Response("User not found", status = status.HTTP_404_NOT_FOUND)
