@@ -77,3 +77,10 @@ def change_message(request, message_id):
             return Response(status = status.HTTP_204_NO_CONTENT)
     except ObjectDoesNotExist:
         return Response("Message not found", status = status.HTTP_404_NOT_FOUND)
+    
+def get_group_messages(group_id):
+    messages = Message.objects.filter(group_id = group_id)
+
+    messages_data = MessageSerializer(messages, many = True).data
+    
+    return Response(messages_data, status = status.HTTP_200_OK)
