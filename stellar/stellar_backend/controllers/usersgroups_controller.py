@@ -3,7 +3,7 @@ from ..services import usergroup_service
 
 @api_view(['POST'])
 def add_user_to_group(request):
-    return usergroup_service.add_user_to_group(request)
+    return usergroup_service.add_user_to_group(request.data)
 
 @api_view(['GET'])
 def is_member_of_group(request, user_id, group_id):

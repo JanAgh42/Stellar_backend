@@ -5,15 +5,26 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import GroupsMemberSerializer
-from ..models import GroupsMember
+from ..models import GroupsMember, Group
 
-def add_user_to_group(request):
+from .notification_service import new_notification
+
+def add_user_to_group(data):
     try:
-        groupmember_serializer = GroupsMemberSerializer(data = request.data)
+        groupmember_serializer = GroupsMemberSerializer(data = data)
+
         if groupmember_serializer.is_valid():
             groupmember_serializer.save()
+
+            group_owner_id = Group.objects.get(id = data["group_id"]).owner_id
+
+            if group_owner_id != data["user_id"]:
+                new_notification({
+                    "user_id": group_owner_id,
+                    "message":"anyad"
+                })
         
-        return Response("User added to group", status = status.HTTP_201_CREATED)
+            return Response("User added to group", status = status.HTTP_201_CREATED)
     
     except DatabaseError:
         return Response("Invalid group or user id", status = status.HTTP_400_BAD_REQUEST)

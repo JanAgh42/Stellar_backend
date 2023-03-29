@@ -15,7 +15,7 @@ def delete_user_notifications(request, user_id):
 
 @api_view(['POST'])
 def new_notification(request):
-    return notification_service.new_notification(request)
+    return notification_service.new_notification(request.data)
 
 @api_view(['POST'])
 def new_group_notification(request, group_id):

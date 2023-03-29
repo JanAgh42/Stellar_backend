@@ -34,9 +34,9 @@ def delete_user_notifications(user_id):
     
     return Response(status = status.HTTP_204_NO_CONTENT)
 
-def new_notification(request):
+def new_notification(data):
     try:
-        notification_serializer = NotificationSerializer(data = request.data)
+        notification_serializer = NotificationSerializer(data = data)
 
         if notification_serializer.is_valid():
             notification = notification_serializer.save()

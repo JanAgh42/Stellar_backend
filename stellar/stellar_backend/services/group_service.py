@@ -8,7 +8,7 @@ from ..serializers import GroupSerializer
 from ..models import Group, GroupsMember
 
 from .message_service import delete_group_messages
-from .usergroup_service import delete_user_from_group
+from .usergroup_service import delete_user_from_group, add_user_to_group
 
 def get_group(group_id):
     try:
@@ -70,7 +70,13 @@ def new_group(request):
         group_serializer = GroupSerializer(data = request.data)
 
         if group_serializer.is_valid():
-            group_serializer.save()
+            group = group_serializer.save()
+
+            add_user_to_group({
+                "user_id": group.owner_id,
+                "group_id": str(group.id),
+                "is_owner": True
+            })
 
             return Response("Group successfully created", status = status.HTTP_201_CREATED)
 
