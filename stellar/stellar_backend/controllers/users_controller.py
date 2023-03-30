@@ -1,8 +1,13 @@
 from rest_framework.decorators import api_view
-from ..services import user_service
+from rest_framework import status
+from rest_framework.response import Response
+
+from ..services import user_service, session_service
 
 @api_view(['GET', 'PUT'])
 def get_put_user(request, user_id):
+    if not session_service.is_token_valid(request.META):
+        return Response("Invalid token", status = status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':
         return user_service.get_user(user_id)

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from ..serializers import NotificationSerializer
 from ..models import GroupsMember, Notification
+from ..static import constants as const
 
 def get_notifications(user_id):
     notifications = Notification.objects.filter(user_id = user_id)
@@ -20,7 +21,7 @@ def delete_notification(notif_id):
 
         notification.delete()
     except ObjectDoesNotExist:
-        return Response("Notification not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.NOTIF_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
 
@@ -30,7 +31,7 @@ def delete_user_notifications(user_id):
 
         notifications.delete()
     except ObjectDoesNotExist:
-        return Response("One or more notifications not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.NOTIFS_MISSING, status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
 
@@ -44,7 +45,7 @@ def new_notification(data):
             return Response({"notification_id": str(notification.id)}, status = status.HTTP_201_CREATED)
 
     except DatabaseError:
-        return Response("Can't create notification", status = status.HTTP_400_BAD_REQUEST)
+        return Response(const.N_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)
     
 def new_group_notification(request, group_id):
 
@@ -60,9 +61,9 @@ def new_group_notification(request, group_id):
                 notification_serializer.save()
                 counter += 1
         if group_users.__len__() == counter:
-            return Response("Notifications created", status = status.HTTP_201_CREATED)
+            return Response(const.NOTIFS_CREATED, status = status.HTTP_201_CREATED)
         else:
-            return Response("Can't create notifications", status = status.HTTP_400_BAD_REQUEST)
+            return Response(const.NS_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)
         
     except DatabaseError:
-        return Response("Can't create notifications", status = status.HTTP_400_BAD_REQUEST)
+        return Response(const.NS_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)

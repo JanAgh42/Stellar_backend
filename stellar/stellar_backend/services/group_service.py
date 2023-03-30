@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from ..serializers import GroupSerializer
 from ..models import Group, GroupsMember
+from ..static import constants as const
 
 from .message_service import delete_group_messages
 from .usergroup_service import delete_user_from_group, add_user_to_group
@@ -17,7 +18,7 @@ def get_group(group_id):
         group_data = GroupSerializer(group).data
 
     except ObjectDoesNotExist:
-        return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.GROUP_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(group_data, status = status.HTTP_200_OK)
 
@@ -30,7 +31,7 @@ def delete_group(group_id):
 
         group.delete()
     except ObjectDoesNotExist:
-        return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.GROUP_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
 
@@ -44,7 +45,7 @@ def change_group(request, group_id):
 
             return Response(status = status.HTTP_204_NO_CONTENT)
     except ObjectDoesNotExist:
-        return Response("Group not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.GROUP_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
 
 
 def get_own_groups(user_id):
@@ -78,8 +79,7 @@ def new_group(request):
                 "is_owner": True
             })
 
-            return Response("Group successfully created", status = status.HTTP_201_CREATED)
-
+            return Response(const.GROUP_CREATED, status = status.HTTP_201_CREATED)
     except DatabaseError:
-        return Response("Group already exists", status = status.HTTP_409_CONFLICT)
+        return Response(const.GROUP_EXISTS, status = status.HTTP_409_CONFLICT)
     

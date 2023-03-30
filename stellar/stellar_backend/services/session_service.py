@@ -1,9 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import QueryDict
 
 from ..serializers import SessionSerializer
-from ..helpers.service_helpers import generate_token
+from ..helpers.service_helpers import generate_token, token_date
 from ..models import SessionToken
+
+import datetime as dt
 
 def create_user_token(user_id):
     session_serializer = SessionSerializer(data = {
@@ -24,3 +25,23 @@ def get_user_token(user_id):
         return SessionSerializer(token).data["token"]
     except ObjectDoesNotExist:
         return create_user_token(user_id)
+
+def is_token_valid(header):
+    try:
+        session_token = SessionToken.objects.get(user_id = header['HTTP_USER'], token = header['HTTP_TOKEN'])
+
+        if session_token.date < dt.datetime.now():
+            return False
+        
+        new_token = SessionSerializer(session_token).data
+        new_token["date"] = token_date()
+
+        updated_token = SessionSerializer(session_token, data = new_token)
+
+        if updated_token.is_valid():
+            updated_token.save()
+
+            return True
+    except ObjectDoesNotExist:
+        return False
+    return False

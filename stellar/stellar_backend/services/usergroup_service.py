@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from ..serializers import GroupsMemberSerializer
 from ..models import GroupsMember, Group
+from ..static import constants as const
 
 from .notification_service import new_notification
 
@@ -24,10 +25,10 @@ def add_user_to_group(data):
                     "message":"anyad"
                 })
         
-            return Response("User added to group", status = status.HTTP_201_CREATED)
+            return Response(const.UG_CREATED, status = status.HTTP_201_CREATED)
     
     except DatabaseError:
-        return Response("Invalid group or user id", status = status.HTTP_400_BAD_REQUEST)
+        return Response(const.UG_INVALID, status = status.HTTP_400_BAD_REQUEST)
     
 def delete_user_from_group(user_id, group_id):
     try:
@@ -45,7 +46,7 @@ def delete_user_from_group(user_id, group_id):
         return Response(status = status.HTTP_204_NO_CONTENT)
 
     except ObjectDoesNotExist:
-        return Response("User is not a member of this group", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.UG_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     
 

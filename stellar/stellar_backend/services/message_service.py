@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from ..serializers import MessageSerializer
 from ..models import Message, User
+from ..static import constants as const
 
 from .notification_service import new_notification
 
@@ -32,7 +33,7 @@ def new_message(request):
             return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
         
     except DatabaseError:
-        return Response("Can't create message", status = status.HTTP_400_BAD_REQUEST)
+        return Response(const.M_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)
 
 def get_message_content(message_id):
     try:
@@ -49,7 +50,7 @@ def get_message_content(message_id):
         
         message_data["user_id"] = user.name
     except ObjectDoesNotExist:
-        return Response("Message not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.MESSAGE_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(message_data, status = status.HTTP_200_OK)
 
@@ -58,7 +59,7 @@ def delete_message(message_id):
         message = Message.objects.get(id = message_id)
         message.delete()
     except ObjectDoesNotExist:
-        return Response("Can't delete message", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.MESSAGE_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)
 
@@ -68,7 +69,7 @@ def delete_group_messages(group_id):
 
         messages.delete()
     except ObjectDoesNotExist:
-        return Response("One or more messages not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.MESSAGES_MISSING, status = status.HTTP_404_NOT_FOUND)
     
     return Response(status = status.HTTP_204_NO_CONTENT)    
 
@@ -82,7 +83,7 @@ def change_message(request, message_id):
 
             return Response(status = status.HTTP_204_NO_CONTENT)
     except ObjectDoesNotExist:
-        return Response("Message not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.MESSAGE_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
 def get_group_messages(group_id):
     messages = Message.objects.filter(group_id = group_id)
