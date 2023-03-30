@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from ..serializers import MessageSerializer
 from ..models import Message, User
 
+from .notification_service import new_notification
+
 def new_message(request):
     try:
         if isinstance(request.data, QueryDict):
@@ -20,8 +22,15 @@ def new_message(request):
 
         if message_serializer.is_valid():        
             message = message_serializer.save()
-        
+
+            if message.reply_to_id != "":
+                new_notification({
+                    "user_id": message.reply_to_id,
+                    "message":"user replied to your message"
+                })
+
             return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
+        
     except DatabaseError:
         return Response("Can't create message", status = status.HTTP_400_BAD_REQUEST)
 
