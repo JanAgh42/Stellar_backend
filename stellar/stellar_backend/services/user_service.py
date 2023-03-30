@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from ..serializers import UserSerializer
 from ..models import User, GroupsMember
+from ..static import constants as const
 
 from .sign_in_data_service import create_register_entry as register, validate_auth
 from .session_service import create_user_token, get_user_token
@@ -18,7 +19,7 @@ def get_user(user_id):
         user_data["groups"] = GroupsMember.objects.filter(user_id = user_data["id"]).count()
 
     except ObjectDoesNotExist:
-        return Response("User not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.USER_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
     return Response(user_data, status = status.HTTP_200_OK)
 
@@ -39,7 +40,7 @@ def register_user(request):
                 "token": token
             }, status = status.HTTP_201_CREATED)
     except DatabaseError:
-        return Response("User already exists", status = status.HTTP_409_CONFLICT)
+        return Response(const.USER_EXISTS, status = status.HTTP_409_CONFLICT)
     
 def authenticate_user(request):
     try:
@@ -52,7 +53,7 @@ def authenticate_user(request):
             }, status = status.HTTP_200_OK)
 
     except ObjectDoesNotExist:
-        return Response("Invalid credentials", status.HTTP_401_UNAUTHORIZED)
+        return Response(const.LOGIN_FAILED, status.HTTP_401_UNAUTHORIZED)
     
 def change_user(request, user_id):
     try:
@@ -64,4 +65,4 @@ def change_user(request, user_id):
 
             return Response(status = status.HTTP_204_NO_CONTENT)
     except ObjectDoesNotExist:
-        return Response("User not found", status = status.HTTP_404_NOT_FOUND)
+        return Response(const.USER_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
