@@ -45,15 +45,17 @@ def register_user(request):
 def authenticate_user(request):
     try:
         auth = validate_auth(request.data)
-        token = get_user_token(auth["user_id"])
 
-        return Response({
-                "user_id": str(auth["user_id"]),
-                "token": token
-            }, status = status.HTTP_200_OK)
+        if auth != None:
+            token = get_user_token(auth["user_id"])
 
+            return Response({
+                    "user_id": str(auth["user_id"]),
+                    "token": token
+                }, status = status.HTTP_200_OK)
     except ObjectDoesNotExist:
-        return Response(const.LOGIN_FAILED, status.HTTP_401_UNAUTHORIZED)
+        pass
+    return Response(const.LOGIN_FAILED, status.HTTP_401_UNAUTHORIZED)
     
 def change_user(request, user_id):
     try:

@@ -41,5 +41,5 @@ def is_token_valid(header):
 
             return True
     except (ObjectDoesNotExist, KeyError):
-        return False
+        pass
     return False
