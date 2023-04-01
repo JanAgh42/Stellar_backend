@@ -1,7 +1,6 @@
 from django.db import models
 from .helpers.model_helpers import token_date, generate_name, get_time
 
-import datetime as dt
 import uuid
 
 class Uuid(models.Model):

@@ -4,8 +4,6 @@ from ..serializers import SessionSerializer
 from ..helpers.service_helpers import generate_token, token_date, get_time
 from ..models import SessionToken
 
-import datetime as dt
-
 def create_user_token(user_id):
     session_serializer = SessionSerializer(data = {
         "user_id": user_id,
