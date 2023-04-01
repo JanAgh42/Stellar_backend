@@ -27,7 +27,7 @@ def new_message(request):
             if message.reply_to_id != "":
                 new_notification({
                     "user_id": message.reply_to_id,
-                    "message":"user replied to your message"
+                    "message": const.MESSAGE_REPLY.format(message.user_id)
                 })
 
             return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)

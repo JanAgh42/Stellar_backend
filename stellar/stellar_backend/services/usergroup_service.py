@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import GroupsMemberSerializer
-from ..models import GroupsMember, Group
+from ..models import GroupsMember, Group, User
 from ..static import constants as const
 
 from .notification_service import new_notification
@@ -17,12 +17,13 @@ def add_user_to_group(data):
         if groupmember_serializer.is_valid():
             groupmember_serializer.save()
 
-            group_owner_id = Group.objects.get(id = data["group_id"]).owner_id
+            group_owner = Group.objects.get(id = data["group_id"]).only('owner_id', 'name')
+            new_member_name = User.objects.get(id = data["user_id"]).name
 
-            if group_owner_id != data["user_id"]:
+            if group_owner.owner_id != data["user_id"]:
                 new_notification({
-                    "user_id": group_owner_id,
-                    "message":"anyad"
+                    "user_id": group_owner.owner_id,
+                    "message": const.JOINED_GROUP.format(new_member_name, group_owner.name)
                 })
         
             return Response(const.UG_CREATED, status = status.HTTP_201_CREATED)
@@ -35,12 +36,13 @@ def delete_user_from_group(user_id, group_id):
         usergroup = GroupsMember.objects.get(user_id = user_id, group_id = group_id)
         usergroup.delete()
 
-        group_owner_id = Group.objects.get(id = group_id).owner_id
+        group_owner = Group.objects.get(id = group_id).only('owner_id', 'name')
+        new_member_name = User.objects.get(id = user_id).name
 
-        if group_owner_id != user_id:
+        if group_owner.owner_id != user_id:
             new_notification({
-                "user_id": group_owner_id,
-                "message":"user left your group"
+                "user_id": group_owner.owner_id,
+                "message": const.LEAVE_GROUP.format(new_member_name, group_owner.name)
             })
 
         return Response(status = status.HTTP_204_NO_CONTENT)
