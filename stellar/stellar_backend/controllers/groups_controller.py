@@ -19,12 +19,21 @@ def manage_single_group(request, group_id):
     
 @api_view(['GET'])
 def get_own_groups(request, user_id):
+    if not session_service.is_token_valid(request.META):
+        return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
+    
     return group_service.get_own_groups(user_id)
 
 @api_view(['GET'])
 def get_all_groups(request, user_id):
+    if not session_service.is_token_valid(request.META):
+        return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
+    
     return group_service.get_all_groups(user_id)
 
 @api_view(['POST'])
 def new_group(request):
+    if not session_service.is_token_valid(request.META):
+        return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
+    
     return group_service.new_group(request)
