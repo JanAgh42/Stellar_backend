@@ -13,9 +13,6 @@ def create_register_entry(request, user_id):
     if signin_serializer.is_valid():
         signin_serializer.save()
 
-        return True
-    return False
-
 def validate_auth(data):
     auth = SignInData.objects.get(email = data["email"], password = data["password"])
 
