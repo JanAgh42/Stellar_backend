@@ -30,8 +30,7 @@ def register_user(request):
         if user_serializer.is_valid():
             user = user_serializer.save()
 
-            if not register(request, str(user.id)):
-                raise DatabaseError()
+            register(request, str(user.id))
             
             token = create_user_token(str(user.id))
 
@@ -40,6 +39,7 @@ def register_user(request):
                 "token": token
             }, status = status.HTTP_201_CREATED)
     except DatabaseError:
+        delete_user(str(user.id))
         return Response(const.USER_EXISTS, status = status.HTTP_409_CONFLICT)
     
 def authenticate_user(request):
@@ -66,3 +66,7 @@ def change_user(request, user_id):
             return Response(status = status.HTTP_204_NO_CONTENT)
     except ObjectDoesNotExist:
         return Response(const.USER_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
+    
+def delete_user(user_id):
+    user = User.objects.get(id = user_id)
+    user.delete()

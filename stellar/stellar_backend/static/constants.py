@@ -30,6 +30,10 @@ UG_CREATED = "User added to group"
 UG_INVALID = "Invalid group or user id"
 UG_NOT_FOUND = "User is not a member of this group"
 
+#  Session response messages
+
+INVALID_TOKEN = "Invalid token supplied"
+
 # ------------------------------------------------
 
 # Notification messages

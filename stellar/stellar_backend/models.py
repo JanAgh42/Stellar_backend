@@ -1,5 +1,5 @@
 from django.db import models
-from .helpers.model_helpers import token_date, generate_name
+from .helpers.model_helpers import token_date, generate_name, get_time
 
 import datetime as dt
 import uuid
@@ -33,14 +33,14 @@ class Message(Uuid):
     group_id = models.CharField(max_length = 100)
     reply_to_id = models.CharField(max_length = 100, default = "")
     message = models.CharField(max_length = 1000)
-    date = models.DateTimeField(default = dt.datetime.now)
+    date = models.DateTimeField(default = get_time)
     location = models.CharField(max_length = 50)
     image_url = models.CharField(max_length = 256)
 
 class Notification(Uuid):
     user_id = models.CharField(max_length = 100)
     message = models.CharField(max_length = 200)
-    date = models.DateTimeField(default = dt.datetime.now)
+    date = models.DateTimeField(default = get_time)
 
 class SignInData(models.Model):
     email = models.EmailField(primary_key = True, unique = True, max_length = 30)

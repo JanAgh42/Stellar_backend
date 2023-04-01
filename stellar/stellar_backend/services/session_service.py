@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from ..serializers import SessionSerializer
-from ..helpers.service_helpers import generate_token, token_date
+from ..helpers.service_helpers import generate_token, token_date, get_time
 from ..models import SessionToken
 
 import datetime as dt
@@ -30,7 +30,7 @@ def is_token_valid(header):
     try:
         session_token = SessionToken.objects.get(user_id = header['HTTP_USER'], token = header['HTTP_TOKEN'])
 
-        if session_token.date < dt.datetime.now():
+        if session_token.date < get_time():
             return False
         
         new_token = SessionSerializer(session_token).data
@@ -42,6 +42,6 @@ def is_token_valid(header):
             updated_token.save()
 
             return True
-    except ObjectDoesNotExist:
+    except (ObjectDoesNotExist, KeyError):
         return False
     return False
