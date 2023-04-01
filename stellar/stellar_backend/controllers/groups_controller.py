@@ -6,8 +6,8 @@ from ..services import group_service, session_service
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def manage_single_group(request, group_id):
-    if not session_service.is_token_valid(request.META):
-        return Response("Invalid token", status = status.HTTP_401_UNAUTHORIZED)
+    # if not session_service.is_token_valid(request.META):
+    #     return Response("Invalid token", status = status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':    
         return group_service.get_group(group_id)

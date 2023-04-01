@@ -40,15 +40,15 @@ def get_message_content(message_id):
         message = Message.objects.get(id = message_id)
         message_data = MessageSerializer(message).data
 
-        user = User.objects.get(id = message_data["user_id"])
+        user_name = User.objects.get(id = message_data["user_id"]).name
 
         if message_data["reply_to_id"] != "":
-            reply_to = User.objects.get(id = message_data["reply_to_id"])
-            message_data["reply_to_id"] = reply_to.name
+            reply_to = User.objects.get(id = message_data["reply_to_id"]).name
+            message_data["reply_to_id"] = reply_to
         else:
             message_data["reply_to_id"] = None
         
-        message_data["user_id"] = user.name
+        message_data["user_id"] = user_name
     except ObjectDoesNotExist:
         return Response(const.MESSAGE_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     

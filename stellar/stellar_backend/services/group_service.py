@@ -57,11 +57,12 @@ def get_own_groups(user_id):
 
 def get_all_groups(user_id):
 
-    groups_ids = GroupsMember.objects.filter(user_id = user_id)
+    groups_ids = GroupsMember.objects.filter(user_id = user_id).only('group_id')
+
     all_groups_data = list()
     
-    for g in groups_ids:
-        group = Group.objects.get(id = g.group_id)
+    for id in groups_ids:
+        group = Group.objects.get(id = id.group_id)
         all_groups_data.append(GroupSerializer(group).data)
 
     return Response(all_groups_data, status = status.HTTP_200_OK)
