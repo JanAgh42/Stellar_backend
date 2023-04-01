@@ -17,7 +17,7 @@ def add_user_to_group(data):
         if groupmember_serializer.is_valid():
             groupmember_serializer.save()
 
-            group_owner = Group.objects.get(id = data["group_id"]).only('owner_id', 'name')
+            group_owner = Group.objects.get(id = data["group_id"])
             new_member_name = User.objects.get(id = data["user_id"]).name
 
             if group_owner.owner_id != data["user_id"]:
@@ -36,7 +36,7 @@ def delete_user_from_group(user_id, group_id):
         usergroup = GroupsMember.objects.get(user_id = user_id, group_id = group_id)
         usergroup.delete()
 
-        group_owner = Group.objects.get(id = group_id).only('owner_id', 'name')
+        group_owner = Group.objects.get(id = group_id)
         new_member_name = User.objects.get(id = user_id).name
 
         if group_owner.owner_id != user_id:
