@@ -50,17 +50,17 @@ def new_notification(data):
 def new_group_notification(request, group_id):
 
     try:
-        group_users = GroupsMember.objects.filter(group_id = group_id)
+        group_users_ids = GroupsMember.objects.filter(group_id = group_id).only('user_id')
         counter = 0
 
-        for user in group_users:
+        for user_id in group_users_ids:
             notification_serializer = NotificationSerializer(data = request.data)
-            notification_serializer.user_id = user.id
+            notification_serializer.user_id = user_id.user_id
 
             if notification_serializer.is_valid():
                 notification_serializer.save()
                 counter += 1
-        if group_users.__len__() == counter:
+        if group_users_ids.__len__() == counter:
             return Response(const.NOTIFS_CREATED, status = status.HTTP_201_CREATED)
         else:
             return Response(const.NS_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)

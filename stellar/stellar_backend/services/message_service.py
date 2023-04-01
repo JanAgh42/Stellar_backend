@@ -9,6 +9,8 @@ from ..serializers import MessageSerializer
 from ..models import Message, User
 from ..static import constants as const
 
+from .notification_service import new_notification
+
 def new_message(request):
     try:
         if isinstance(request.data, QueryDict):
@@ -21,8 +23,15 @@ def new_message(request):
 
         if message_serializer.is_valid():        
             message = message_serializer.save()
-        
+
+            if message.reply_to_id != "":
+                new_notification({
+                    "user_id": message.reply_to_id,
+                    "message":"user replied to your message"
+                })
+
             return Response({"message_id": str(message.id)}, status = status.HTTP_201_CREATED)
+        
     except DatabaseError:
         return Response(const.M_CANNOT_CREATE, status = status.HTTP_400_BAD_REQUEST)
 
@@ -31,15 +40,15 @@ def get_message_content(message_id):
         message = Message.objects.get(id = message_id)
         message_data = MessageSerializer(message).data
 
-        user = User.objects.get(id = message_data["user_id"])
+        user_name = User.objects.get(id = message_data["user_id"]).name
 
         if message_data["reply_to_id"] != "":
-            reply_to = User.objects.get(id = message_data["reply_to_id"])
-            message_data["reply_to_id"] = reply_to.name
+            reply_to = User.objects.get(id = message_data["reply_to_id"]).name
+            message_data["reply_to_id"] = reply_to
         else:
             message_data["reply_to_id"] = None
         
-        message_data["user_id"] = user.name
+        message_data["user_id"] = user_name
     except ObjectDoesNotExist:
         return Response(const.MESSAGE_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     

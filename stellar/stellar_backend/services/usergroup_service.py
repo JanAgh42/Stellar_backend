@@ -35,11 +35,20 @@ def delete_user_from_group(user_id, group_id):
         usergroup = GroupsMember.objects.get(user_id = user_id, group_id = group_id)
         usergroup.delete()
 
+        group_owner_id = Group.objects.get(id = group_id).owner_id
+
+        if group_owner_id != user_id:
+            new_notification({
+                "user_id": group_owner_id,
+                "message":"user left your group"
+            })
+
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
     except ObjectDoesNotExist:
         return Response(const.UG_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)
     
-    return Response(status = status.HTTP_204_NO_CONTENT)
-
+    
 
 def is_member_of_group(user_id, group_id):
     try:
