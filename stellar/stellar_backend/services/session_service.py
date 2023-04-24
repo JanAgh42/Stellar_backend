@@ -29,6 +29,7 @@ def is_token_valid(header):
         session_token = SessionToken.objects.get(user_id = header['HTTP_USER'], token = header['HTTP_TOKEN'])
 
         if session_token.date < get_time():
+            session_token.delete()
             return False
         
         new_token = SessionSerializer(session_token).data

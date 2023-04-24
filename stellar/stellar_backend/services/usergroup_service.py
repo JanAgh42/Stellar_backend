@@ -70,6 +70,6 @@ def num_where_is_owner(user_id):
         if group["is_owner"] == True:
             num_is_owner += 1
 
-    return Response({"num_groups_owner": num_is_owner}, status = status.HTTP_200_OK)
+    return num_is_owner
 
 

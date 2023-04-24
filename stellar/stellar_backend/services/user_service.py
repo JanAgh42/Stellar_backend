@@ -5,11 +5,12 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ..serializers import UserSerializer
-from ..models import User, GroupsMember
+from ..models import User, GroupsMember, SignInData, Message
 from ..static import constants as const
 
 from .sign_in_data_service import create_register_entry as register, validate_auth
 from .session_service import create_user_token, get_user_token
+from .usergroup_service import num_where_is_owner
 
 def get_user(user_id):
     try:
@@ -17,6 +18,9 @@ def get_user(user_id):
 
         user_data = UserSerializer(user).data
         user_data["groups"] = GroupsMember.objects.filter(user_id = user_data["id"]).count()
+        user_data["posts"] = Message.objects.filter(user_id = user_id).count()
+        user_data["own_groups"] = num_where_is_owner(user_id)
+        user_data["email"] = SignInData.objects.get(user_id = user_data["id"]).email
 
     except ObjectDoesNotExist:
         return Response(const.USER_NOT_FOUND, status = status.HTTP_404_NOT_FOUND)

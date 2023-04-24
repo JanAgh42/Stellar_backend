@@ -25,10 +25,3 @@ def delete_user_from_group(request, user_id, group_id):
         return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
     
     return usergroup_service.delete_user_from_group(user_id, group_id)
-
-@api_view(['GET'])
-def num_where_is_owner(request, user_id):
-    if not session_service.is_token_valid(request.META):
-        return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
-    
-    return usergroup_service.num_where_is_owner(user_id)

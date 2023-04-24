@@ -67,6 +67,19 @@ def get_all_groups(user_id):
 
     return Response(all_groups_data, status = status.HTTP_200_OK)
 
+def search_groups(request):
+    category = request.GET['category'] if 'category' in request.GET else None
+    name = request.GET['name'] if 'name' in request.GET else None
+
+    groups = Group.objects.all() if category == None else Group.objects.filter(category = category)
+    groups = [group for group in groups if name in group.name or group.name in name]
+
+    groups_data = GroupSerializer(groups, many = True).data
+
+    return Response(groups_data, status = status.HTTP_200_OK)
+
+
+
 def new_group(request):
     try:
         group_serializer = GroupSerializer(data = request.data)

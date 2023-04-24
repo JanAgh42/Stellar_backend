@@ -13,6 +13,7 @@ group_urls = [
     path('groups/<group_id>', groups_controller.manage_single_group),
     path('groups/<user_id>/owner', groups_controller.get_own_groups),
     path('groups/<user_id>/all', groups_controller.get_all_groups),
+    path('groups/search', groups_controller.search_groups),
     path('groups', groups_controller.new_group)
 ]
 
@@ -36,8 +37,7 @@ message_urls = [
 usergroup_urls = [
     path('usersgroups', usersgroups_controller.add_user_to_group),
     path('usersgroups/<user_id>/member/<group_id>', usersgroups_controller.is_member_of_group),
-    path('usersgroups/<user_id>/leave/<group_id>', usersgroups_controller.delete_user_from_group),
-    path('usersgroups/<user_id>/owner', usersgroups_controller.num_where_is_owner)
+    path('usersgroups/<user_id>/leave/<group_id>', usersgroups_controller.delete_user_from_group)
 ]
 
 urlpatterns = [

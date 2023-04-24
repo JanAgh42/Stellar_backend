@@ -25,6 +25,13 @@ def get_own_groups(request, user_id):
     return group_service.get_own_groups(user_id)
 
 @api_view(['GET'])
+def search_groups(request):
+    if not session_service.is_token_valid(request.META):
+        return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
+    
+    return group_service.search_groups(request)
+
+@api_view(['GET'])
 def get_all_groups(request, user_id):
     if not session_service.is_token_valid(request.META):
         return Response(const.INVALID_TOKEN, status = status.HTTP_401_UNAUTHORIZED)
