@@ -1,12 +1,16 @@
-## MTAA 2022/2023 Team Project
-### Stellar - Backend
+## Stellar - backend
 
-A social network for students and study groups.
+An android application - social network for students and study groups.
 
-### Members:
+Copyright &copy; 2023. All rights reserved.
 
-- Ján Ágh & Irina Makarova
+### Team members:
+
+- Ján Ágh
+- Irina Makarova
 
 ### Technology:
 
-- Built in Python, Django, Django REST Framework & MongoDB Atlas
+- Python
+- Django & Django REST Framework
+- MongoDB Atlas
